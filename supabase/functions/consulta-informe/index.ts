@@ -15,6 +15,6 @@ serve(async(req)=>{
   if(!data||data.status!=='active')return new Response(JSON.stringify({error:'Informe no disponible'}),{status:404,headers});
   const {data:signed,error:signError}=await db.storage.from('report-pdfs').createSignedUrl(data.file_path,60,{download:(data.original_filename||data.file_path.split('/').pop()||'informe.pdf')});
   if(signError)throw signError;
-  return new Response(JSON.stringify({number:data.number,identification:data.identification,published_at:data.published_at,issuer:data.issuer,download_url:signed.signedUrl}),{headers});
+  return new Response(JSON.stringify({number:data.number,identification:data.identification,published_at:data.published_at,issuer:data.issuer,original_filename:data.original_filename||null,download_url:signed.signedUrl}),{headers});
  }catch(err){console.error(err);return new Response(JSON.stringify({error:'No se pudo cargar el informe'}),{status:500,headers})}
 });
