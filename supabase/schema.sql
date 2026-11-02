@@ -29,7 +29,7 @@ grant execute on function public.is_portal_admin() to authenticated;
 create policy "admin reports select" on public.portal_reports for select to authenticated using (public.is_portal_admin());
 create policy "admin reports insert" on public.portal_reports for insert to authenticated with check (public.is_portal_admin());
 create policy "admin reports update" on public.portal_reports for update to authenticated using (public.is_portal_admin()) with check (public.is_portal_admin());
--- Sin borrado público ni borrado por administrador (se conserva la trazabilidad).
+-- El borrado solo se permite a administradores autenticados.
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
 values ('report-pdfs','report-pdfs',false,20971520,array['application/pdf'])
 on conflict (id) do update set public=false,file_size_limit=20971520,allowed_mime_types=array['application/pdf'];
@@ -51,3 +51,11 @@ revoke all on function public.find_public_report(text) from public;
 grant execute on function public.find_public_report(text) to anon,authenticated;
 -- DESPUÉS: ejecute con el UUID del usuario creado en Authentication:
 -- insert into public.portal_admins(user_id) values ('UUID-DEL-USUARIO');
+
+-- Permisos adicionales para eliminar informes y sus PDF (ejecutar en Supabase SQL Editor).
+drop policy if exists "admin reports delete" on public.portal_reports;
+create policy "admin reports delete" on public.portal_reports for delete to authenticated using (public.is_portal_admin());
+drop policy if exists "admins delete reports storage" on storage.objects;
+create policy "admins delete reports storage" on storage.objects for delete to authenticated using (bucket_id='report-pdfs' and public.is_portal_admin());
+drop policy if exists "admins select reports storage" on storage.objects;
+create policy "admins select reports storage" on storage.objects for select to authenticated using (bucket_id='report-pdfs' and public.is_portal_admin());
