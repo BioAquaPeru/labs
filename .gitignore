@@ -1,8 +1,0 @@
-*.pdf
-*.zip
-*.rar
-.env
-.env.*
-assets/config-backup.js
-node_modules/
-.DS_Store
