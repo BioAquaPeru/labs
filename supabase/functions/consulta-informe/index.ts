@@ -10,10 +10,10 @@ serve(async(req)=>{
  if(!/^[a-f0-9]{64}$/.test(token))return new Response(JSON.stringify({error:'Código inválido'}),{status:400,headers});
  try {
   const db=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false,autoRefreshToken:false}});
-  const {data,error}=await db.from('portal_reports').select('number,identification,published_at,issuer,file_path,status').eq('token',token).maybeSingle();
+  const {data,error}=await db.from('portal_reports').select('number,identification,published_at,issuer,file_path,original_filename,status').eq('token',token).maybeSingle();
   if(error)throw error;
   if(!data||data.status!=='active')return new Response(JSON.stringify({error:'Informe no disponible'}),{status:404,headers});
-  const {data:signed,error:signError}=await db.storage.from('report-pdfs').createSignedUrl(data.file_path,60,{download:true});
+  const {data:signed,error:signError}=await db.storage.from('report-pdfs').createSignedUrl(data.file_path,60,{download:(data.original_filename||data.file_path.split('/').pop()||'informe.pdf')});
   if(signError)throw signError;
   return new Response(JSON.stringify({number:data.number,identification:data.identification,published_at:data.published_at,issuer:data.issuer,download_url:signed.signedUrl}),{headers});
  }catch(err){console.error(err);return new Response(JSON.stringify({error:'No se pudo cargar el informe'}),{status:500,headers})}
