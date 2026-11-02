@@ -12,6 +12,7 @@ create table if not exists public.portal_reports (
   issuer text not null check (length(issuer) between 1 and 150),
   published_at timestamptz not null,
   file_path text unique not null,
+  original_filename text,
   status text not null default 'active' check (status in ('active','inactive')),
   created_at timestamptz not null default now()
 );
@@ -59,3 +60,6 @@ drop policy if exists "admins delete reports storage" on storage.objects;
 create policy "admins delete reports storage" on storage.objects for delete to authenticated using (bucket_id='report-pdfs' and public.is_portal_admin());
 drop policy if exists "admins select reports storage" on storage.objects;
 create policy "admins select reports storage" on storage.objects for select to authenticated using (bucket_id='report-pdfs' and public.is_portal_admin());
+
+-- Migración para proyectos existentes: guardar el nombre original al subir el PDF.
+alter table public.portal_reports add column if not exists original_filename text;
