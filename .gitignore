@@ -1,11 +1,8 @@
-# Local and private files
-*.rar
-*.zip
 *.pdf
+*.zip
+*.rar
 .env
 .env.*
-!*.example
 assets/config-backup.js
 node_modules/
 .DS_Store
-Thumbs.db
