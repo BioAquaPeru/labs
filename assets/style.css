@@ -27,3 +27,5 @@
 
 /* Preparación del informe: QR antes de PDF */
 #prepare-btn{background:#145a62}#register-form .muted{font-size:13px;line-height:1.5;margin:0 0 16px}#register-form #pdf{margin-top:4px}#created-help{line-height:1.5;font-size:13px;color:#596c76} @media(max-width:700px){.panel{width:min(100%,420px)}.btn{font-size:14px}.field{height:46px}.titleline h1{font-size:25px}.footer{font-size:12px}}
+
+.validation-stamp{margin:20px 0 12px;border:1px solid #e7e9ed;background:white;overflow:hidden;max-width:100%}.validation-head{background:#f3921d;color:#101010;padding:10px 12px;font-size:14px;overflow-wrap:anywhere;line-height:1.45}.validation-head strong{font-weight:700}.validation-note{padding:10px 12px;color:#131313;font-size:13px;line-height:1.6}.validation-note a{color:#1555a1;text-decoration:underline;overflow-wrap:anywhere}#export-validation{margin-bottom:12px}
